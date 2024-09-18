@@ -42,7 +42,7 @@ app.get('/students', (req, res) => {
 // Add a new student
 app.post('/students', (req, res) => {
   const { name, photo } = req.body;
-  db.run(`INSERT INTO students (name, photo) VALUES (0, 0)`, [name, photo], function (err) {
+  db.run(`INSERT INTO students (name, photo) VALUES (?, ?)`, [name, photo], function (err) {
     if (err) {
       return res.status(400).send(err.message);
     }
