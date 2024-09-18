@@ -23,8 +23,9 @@ function App() {
     const newStudent = {
       name: newStudentName,
       photo: "https://via.placeholder.com/150",
-      meals: 0,
-      extraSpent: 0,
+      meals:0,
+      extraSpent:0,
+
     };
 
     fetch('http://192.168.113.8:2170/students', {
@@ -54,7 +55,7 @@ function App() {
     })
       .then(() => {
         const updatedStudents = students.map((student) =>
-          student.id === id ? { ...student, [field]: Number(value) } : student
+          student.id === id ? { ...student, [field]: value } : student
         );
         setStudents(updatedStudents);
       })
@@ -75,38 +76,6 @@ function App() {
     }
   };
 
-  // Reset all students' meals and extraSpent to 0
-  const resetAllStudents = () => {
-    const confirmReset = window.confirm('Are you sure you want to reset all students\' meals and extra spent?');
-    if (confirmReset) {
-      Promise.all(students.map(student =>
-        fetch(`http://192.168.113.8:2170/students/${student.id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ field: 'meals', value: 0 }),
-        }).then(() =>
-          fetch(`http://192.168.113.8:2170/students/${student.id}`, {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ field: 'extraSpent', value: 0 }),
-          })
-        )
-      ))
-        .then(() => {
-          setStudents(students.map(student => ({
-            ...student,
-            meals: 0,
-            extraSpent: 0
-          })));
-        })
-        .catch((error) => console.error('Error resetting students:', error));
-    }
-  };
-
   return (
     <div className="App">
       <h1>Student Profiles</h1>
@@ -119,7 +88,6 @@ function App() {
       />
       
       <button onClick={addStudent}>Add Student</button>
-      <button onClick={resetAllStudents}>Reset All Students</button>
 
       <StudentList 
         students={students} 
